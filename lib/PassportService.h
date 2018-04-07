@@ -1,5 +1,6 @@
+# pragma once
 # include <memory>
-# include <fstream>
+# include <sstream>
 # include <string>
 # include "Card.h"
 
@@ -10,10 +11,14 @@
 class Date
 {
 public:
+    Date() = default;
+    Date(size_t, size_t, size_t);
+
     friend std::istream& operator>>(std::istream&, Date&);
-    friend std::ostream& operator<<(std::ostream&, Date&);
+    friend std::ostream& operator<<(std::ostream&, const Date&);
 
     bool operator==(const Date&) const;
+    bool operator<(const Date&) const;
 private:
     size_t year_, month_, day_;
 };
@@ -28,7 +33,7 @@ std::istream& operator>>(std::istream&, Date&);
  * @brief operator<< for output to ostream Date object
  * @details Format YYYY-MM-DD
  */
-std::ostream& operator<<(std::ostream&, Date&);
+std::ostream& operator<<(std::ostream&, const Date&);
 
 using Name = std::string;
 using Surname = std::string;
@@ -60,6 +65,8 @@ public:
      */
     std::string getFullName() const;
     Date getDateBirth() const;
+
+    bool operator<(const Passport&) const;
 private:
     Name name_;
     Surname surn_;
@@ -121,7 +128,7 @@ public:
      */
     bool passportValidation(const std::shared_ptr<Passport> &pass) const;
 private:
-    static const std::string base_file_;
+    static const std::string data_;
 
     /**
      * @brief Checks if the data of the passport is the same as given as arguments.

@@ -1,3 +1,4 @@
+# pragma once
 # include <memory>
 
 using Id = size_t;
@@ -10,13 +11,9 @@ class Card
 {
 public:
     Card() = default;
-
     Card(const Id&);
-
     Card(const std::shared_ptr<Card>&);
-
     Card(const Card&) = default;
-
     ~Card() = default;
 
     /**
@@ -24,6 +21,8 @@ public:
      * @return Idenificator of the card
      */
     Id getId() const;
+
+    bool operator<(const Card&) const;
 private:
     Id id_;
 };

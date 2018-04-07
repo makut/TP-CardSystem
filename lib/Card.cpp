@@ -7,3 +7,8 @@ Id Card::getId() const
 {
     return id_;
 }
+
+bool Card::operator<(const Card &other) const
+{
+    return getId() < other.getId();
+}

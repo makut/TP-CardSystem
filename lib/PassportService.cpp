@@ -1,5 +1,7 @@
 # include "PassportService.h"
 
+Date::Date(size_t year, size_t month, size_t day) : year_(year), month_(month), day_(day) {}
+
 std::istream& operator>>(std::istream &in, Date &dt)
 {
     std::string dt_str;
@@ -10,7 +12,7 @@ std::istream& operator>>(std::istream &in, Date &dt)
     return in;
 }
 
-std::ostream& operator<<(std::ostream &out, Date &dt)
+std::ostream& operator<<(std::ostream &out, const Date &dt)
 {
     out << dt.year_ << '-' << dt.month_ << '-' << dt.day_;
     return out;
@@ -21,7 +23,27 @@ bool Date::operator==(const Date &other) const
     return year_ == other.year_ && month_ == other.month_ && day_ == other.day_;
 }
 
-const std::string PassportService::base_file_ = "passport_data.txt";
+bool Date::operator<(const Date &other) const
+{
+    if (year_ < other.year_)
+        return true;
+    else if (year_ > other.year_)
+        return false;
+    if (month_ < other.month_)
+        return true;
+    else if (month_ > other.month_)
+        return false;
+    if (day_ < other.day_)
+        return true;
+    return false;
+}
+
+const std::string PassportService::data_ = "0 Maxim Alexandrovich Utushkin 1234123456 1999-06-07\n\
+1 Ivan Ivanovich Ivanov 2345283906 1960-03-04\n\
+2 Petr Andreevich Kulagin 4932869324 1998-10-18\n\
+3 Roman Viktorovich Gorb 3405963023 1999-09-03\n\
+4 Sergey Armenovich Grigoriants 2304959614 2000-02-27\n\
+5 Amir Marselevich Yagudin 8934629585 2000-04-21\n";
 
 Passport::Passport(const Name &name, const Patronymic &patr,
                    const Surname &surn, const PassportNumber &num, Date b):
@@ -29,6 +51,29 @@ Passport::Passport(const Name &name, const Patronymic &patr,
 
 Passport::Passport(Name&& name, Patronymic&& patr, Surname&& surn, PassportNumber&& num, Date b):
     name_(std::move(name)), patr_(std::move(patr)), surn_(std::move(surn)), num_(std::move(num)), birth_(b) {}
+
+bool Passport::operator<(const Passport &other) const
+{
+    if (name_ < other.name_)
+        return true;
+    else if (name_ > other.name_)
+        return false;
+    if (surn_ < other.surn_)
+        return true;
+    else if (surn_ > other.surn_)
+        return false;
+    if (patr_ < other.patr_)
+        return true;
+    else if (patr_ > other.patr_)
+        return false;
+    if (num_ < other.num_)
+        return true;
+    else if (num_ > other.num_)
+        return false;
+    if (birth_ < other.birth_)
+        return true;
+    return false;
+}
 
 Name Passport::getName() const
 {
@@ -113,8 +158,10 @@ std::shared_ptr<Passport> PassportBuilder::getResult() const
 std::shared_ptr<Passport> PassportService::getPassport(const std::shared_ptr<Card> &card) const
 {
     if (card == nullptr)
+    {
         return nullptr;
-    std::ifstream fin(base_file_);
+    }
+    std::stringstream fin(data_);
     Id curr;
     while (fin >> curr)
     {
@@ -126,7 +173,6 @@ std::shared_ptr<Passport> PassportService::getPassport(const std::shared_ptr<Car
         fin >> name >> patr >> surn >> num >> date_b;
         if (curr == card->getId())
         {
-            fin.close();
             PassportBuilder pb;
             pb.setName(name);
             pb.setPatronymic(patr);
@@ -136,7 +182,6 @@ std::shared_ptr<Passport> PassportService::getPassport(const std::shared_ptr<Car
             return pb.getResult();
         }
     }
-    fin.close();
     return nullptr;
 }
 
@@ -152,7 +197,7 @@ bool PassportService::passportValidation(const std::shared_ptr<Passport> &pass) 
 {
     if (pass == nullptr)
         return false;
-    std::ifstream fin(base_file_);
+    std::stringstream fin(data_);
     Id curr;
     while (fin >> curr)
     {
