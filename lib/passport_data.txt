@@ -1,0 +1,6 @@
+0 Maxim Alexandrovich Utushkin 1234123456 1999-06-07
+1 Ivan Ivanovich Ivanov 2345283906 1960-03-04
+2 Petr Andreevich Kulagin 4932869324 1998-10-18
+3 Roman Viktorovich Gorb 3405963023 1999-09-03
+4 Sergey Armenovich Grigoriants 2304959614 2000-02-27
+5 Amir Marselevich Yagudin 8934629585 2000-04-21
