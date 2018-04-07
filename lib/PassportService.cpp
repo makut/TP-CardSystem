@@ -60,6 +60,56 @@ Date Passport::getDateBirth() const
     return birth_;
 }
 
+void PassportBuilder::setName(const Name &name)
+{
+    name_ = name;
+}
+
+void PassportBuilder::setName(Name&& other)
+{
+    name_ = std::move(other);
+}
+
+void PassportBuilder::setPatronymic(const Patronymic &patr)
+{
+    patr_ = patr;
+}
+
+void PassportBuilder::setPatronymic(Patronymic&& patr)
+{
+    patr_ = std::move(patr);
+}
+
+void PassportBuilder::setSurname(const Surname &surn)
+{
+    surn_ = surn;
+}
+
+void PassportBuilder::setSurname(Surname&& surn)
+{
+    surn_ = std::move(surn);
+}
+
+void PassportBuilder::setPassportNumber(const PassportNumber &num)
+{
+    num_ = num;
+}
+
+void PassportBuilder::setPassportNumber(PassportNumber&& num)
+{
+    num_ = std::move(num);
+}
+
+void PassportBuilder::setBirthDate(const Date &dt)
+{
+    birth_ = dt;
+}
+
+std::shared_ptr<Passport> PassportBuilder::getResult() const
+{
+    return std::shared_ptr<Passport>(new Passport(name_, patr_, surn_, num_, birth_));
+}
+
 std::shared_ptr<Passport> PassportService::getPassport(const std::shared_ptr<Card> &card) const
 {
     if (card == nullptr)
@@ -77,7 +127,13 @@ std::shared_ptr<Passport> PassportService::getPassport(const std::shared_ptr<Car
         if (curr == card->getId())
         {
             fin.close();
-            return std::shared_ptr<Passport>(new Passport(name, patr, surn, num, date_b));
+            PassportBuilder pb;
+            pb.setName(name);
+            pb.setPatronymic(patr);
+            pb.setSurname(surn);
+            pb.setPassportNumber(num);
+            pb.setBirthDate(date_b);
+            return pb.getResult();
         }
     }
     fin.close();

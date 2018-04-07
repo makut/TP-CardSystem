@@ -69,6 +69,33 @@ private:
 };
 
 /**
+ * @brief A class for passport constructing
+ * @details You can get your passport as shared_ptr after step-by-step calling setters.
+ */
+class PassportBuilder
+{
+public:
+    PassportBuilder() = default;
+
+    void setName(const Name&);
+    void setName(Name&&);
+    void setPatronymic(const Patronymic&);
+    void setPatronymic(Patronymic&&);
+    void setSurname(const Surname&);
+    void setSurname(Surname&&);
+    void setPassportNumber(const PassportNumber&);
+    void setPassportNumber(PassportNumber&&);
+    void setBirthDate(const Date&);
+    std::shared_ptr<Passport> getResult() const;
+private:
+    Name name_;
+    Patronymic patr_;
+    Surname surn_;
+    PassportNumber num_;
+    Date birth_;
+};
+
+/**
  * @brief Base service for getting documents data
  * @details Stub for sending request on server and getting the data: first name, patronymic, last name,
  * passport number, birth date
