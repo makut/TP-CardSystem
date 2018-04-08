@@ -11,8 +11,8 @@ class Card
 {
 public:
     Card() = default;
-    Card(const Id&);
-    Card(const std::shared_ptr<Card>&);
+    explicit Card(const Id&);
+    explicit Card(const std::shared_ptr<Card>&);
     Card(const Card&) = default;
     ~Card() = default;
 
